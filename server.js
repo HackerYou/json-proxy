@@ -23,8 +23,7 @@ var server = http.createServer((req,res) => {
 		var data = queryString.stringify(params);
 
 
-		request.get(url + '/?' + data ,(err,response,body) => {
-
+		request.get(url + '?' + data ,(err,response,body) => {
 			if(response.statusCode === 200) {
 				res.writeHead(200);
 				res.end(body);
