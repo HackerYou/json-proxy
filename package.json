@@ -1,0 +1,16 @@
+{
+  "name": "json-proxy",
+  "version": "1.0.0",
+  "description": "Simple proxy for students to make JSON requests",
+  "main": "server.js",
+  "dependencies": {
+    "request": "^2.65.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Ryan Christiani",
+  "license": "ISC"
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Proxy Test</title>
+</head>
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script>
+	$.ajax({
+		url: 'http://localhost:4500',
+		type: 'GET',
+		data: {
+			reqUrl: 'http://api.brewerydb.com/v2/beers',
+			params: {
+				"key" :"217d6bd3a9e78edebe4af03ca28fa01b",
+				"styleId" :1 
+			}
+		}
+	}).then(function(res) {
+		console.log(res);
+	});
+	</script>
+</body>
+</html>
