@@ -3,6 +3,7 @@
 This is a very simple proxy server to get around CORS issues when an API does not provide JSONP.
 
 ##How to use.
+This is live at proxy.hackeryou.com. 
 
 The set up is very simple, when you make a request with `$.ajax` you might right it like this.
 
