@@ -5,9 +5,11 @@ var request = require('request');
 var server = http.createServer((req,res) => {
 	res.setHeader('Access-Control-Allow-Origin', '*'); 
 	res.setHeader("Content-Type", "application/json");
-	if(req.method === 'GET') {
 
-		var query = queryString.parse(req.url.substring(2));
+	var query = queryString.parse(req.url.substring(2));
+	
+	if(req.method === 'GET' && query.reqUrl) {
+
 		var url = query.reqUrl;
 		var params = (function(queryObj) {
 			var obj = {};
@@ -35,7 +37,7 @@ var server = http.createServer((req,res) => {
 		});
 	}
 	else {
-		res.end('{"error": "Must be a GET request"}');
+		res.end('{"error": "Must be a GET request and contain a reqUrl param"}');
 	}
 });
 
