@@ -7,15 +7,27 @@ var server = http.createServer((req,res) => {
 	res.setHeader("Content-Type", "application/json");
 
 	var query = queryString.parse(req.url.substring(2));
-	
+
 	if(req.method === 'GET' && query.reqUrl) {
 
 		var url = query.reqUrl;
+
 		var params = (function(queryObj) {
 			var obj = {};
+			//Pattern for is the request looks like `params[format]`
+			var pattern = /params\[(.*)\]/;
 			for(key in queryObj) {
 				if(key !== 'reqUrl') {
-					var newKey = key.substring(7, (key.length - 1) );
+					//Check pattern
+					var patternMatch = key.match(pattern);
+					var newKey = '';
+					if(patternMatch) {
+						//Get captured pattern
+						newKey = patternMatch[1];
+					}
+					else {
+						newKey = key;
+					}
 					obj[newKey] = queryObj[key];
 				}
 			}
