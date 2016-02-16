@@ -1,12 +1,16 @@
 var http = require('http');
 var queryString = require('querystring');
 var request = require('request');
+var xml2json = require('xml2json');
 
 var server = http.createServer((req,res) => {
 	res.setHeader('Access-Control-Allow-Origin', '*'); 
 	res.setHeader("Content-Type", "application/json");
 
 	var query = queryString.parse(req.url.substring(2));
+	if(!query.xmlToJSON) {
+		query.xmlToJSON = false;
+	}
 
 	if(req.method === 'GET' && query.reqUrl) {
 
@@ -36,8 +40,10 @@ var server = http.createServer((req,res) => {
 
 		var data = queryString.stringify(params);
 
-
 		request.get(url + '?' + data ,(err,response,body) => {
+			if(query.xmlToJSON === 'true') {
+				body = xml2json.toJson(body);
+			}
 			if(response.statusCode === 200) {
 				res.writeHead(200);
 				res.end(body);

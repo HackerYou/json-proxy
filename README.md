@@ -20,7 +20,7 @@ The set up is very simple, when you make a request with `$.ajax` you might right
 		...
 	});
 
-However does to CORS you might not be able to access the API this way. To this this proxy you have to change you request to look like this.
+However because of CORS you might not be able to access the API this way. If the API does not offer JSONP you can use this proxy to bypass the CORS issue. To use this proxy you have to change you request to look like this.
 
 	$.ajax({
 		url: 'http://proxy.hackeryou.com',
@@ -32,8 +32,20 @@ However does to CORS you might not be able to access the API this way. To this t
 				key: apiKey,
 				param1: value,
 				param2: value
-			}
+			},
+			xmlToJSON: false
 		}
 	}).then(function(res) {
 		...
 	});
+
+### Options to pass
+
+You pass your information via the `data` object, in there there are a bunch of options you need to pass.
+
+param | type | description 
+----- | ------ | -----------
+reqUrl | `string` | The URL for your endpoint.
+params | `object` | The options that you would normally pass to the data object
+xmlToJSON | `boolean` | Defaults to `false`, change to true if API returns XML
+
