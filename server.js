@@ -44,7 +44,7 @@ var server = http.createServer((req,res) => {
 			if(query.xmlToJSON === 'true') {
 				body = xml2json.toJson(body);
 			}
-			if(response.statusCode === 200) {
+			if(response && response.statusCode === 200) {
 				res.writeHead(200);
 				res.end(body);
 			}
