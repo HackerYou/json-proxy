@@ -20,6 +20,43 @@
 	}).then(function(res) {
 		console.log(res);
 	});
+	//https://sheetsu.com/apis/14561de4
+	// var books = $.ajax({
+	// 	url: 'https://sheetsu.com/apis/14561de4',
+	// 	dataType: 'json',
+	// 	method: 'GET'
+	// });
+
+
+	// myAPIProject = {};
+	// myAPIProject.goodreadsAPI = {}; // empty object to store all the goodreads API info
+	// myAPIProject.goodreadsAPI.endpoint = 'https://www.goodreads.com/book/title.xml';
+	// myAPIProject.goodreadsAPI.key = 'AYoaCzPGXisCTWsP6Ainw'
+
+	// myAPIProject.goodreadsAPI.getBooks = function(selectedBook) {
+	// 	return $.ajax({
+	// 		url: 'http://localhost:4500', // send the initial request through the HY proxy app because the endpoint returns XML. We need to mask the URL through another.
+	// 		dataType: 'json',
+	// 		method: 'GET',
+	// 		data: { // This is where we pass in info regarding the endpoint we want to use. 
+	// 			reqUrl: myAPIProject.goodreadsAPI.endpoint, // Put API endpoint here
+	// 			params: { // act as a query string ie. data property in jquery
+	// 				key: myAPIProject.goodreadsAPI.key,
+	// 				title: selectedBook.bookTitle
+	// 			},
+	// 			xmlToJSON: true
+	// 		}
+	// 	})
+	// };
+	// books.then(function(bookData) {
+	// 	console.log(bookData);
+	// 	var myBooks = bookData.result.map((book) => {
+	// 		return myAPIProject.goodreadsAPI.getBooks(book);
+	// 	});
+	// 	$.when.apply(null,myBooks).done(() => {
+	// 		console.log(arguments);
+	// 	})
+	// });
 	</script>
 </body>
 </html>
