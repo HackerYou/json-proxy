@@ -1,9 +1,10 @@
-var http = require('http');
-var queryString = require('querystring');
-var request = require('request');
-var xml2json = require('xml2json');
+const queryString = require('querystring');
+const request = require('request');
+const xml2json = require('xml2json');
+const express = require('express');
+const app = express();
 
-var server = http.createServer((req,res) => {
+app.get('/', (req,res) => {
 	res.setHeader('Access-Control-Allow-Origin', '*'); 
 	res.setHeader("Content-Type", "application/json");
 
@@ -40,7 +41,12 @@ var server = http.createServer((req,res) => {
 
 		var data = queryString.stringify(params);
 
-		request.get(url + '?' + data ,(err,response,body) => {
+		request.get({
+				url: url + '?' + data,
+				headers: {
+					'User-Agent': 'Proxy.hackeryou.com'
+				}
+			},(err,response,body) => {
 			if(query.xmlToJSON === 'true') {
 				body = xml2json.toJson(body);
 			}
@@ -59,4 +65,18 @@ var server = http.createServer((req,res) => {
 	}
 });
 
-server.listen(4500);
+app.use(express.static(`${__dirname}/oauth/client`))
+app.get(['/oauth','/oauth*'], (req, res) => {
+	if(req.originalUrl.match(/client/gi)) {
+		//What is this all aboot?!?
+
+		res.sendFile(`${__dirname}/${req.originalUrl.replace('/oauth/oauth/','/oauth/')}`);
+	}
+	else {
+		res.sendFile(`${__dirname}/oauth/index.html`);
+	}
+});
+
+
+
+app.listen(4500);
