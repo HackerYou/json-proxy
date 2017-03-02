@@ -12,7 +12,7 @@ function pullParams(queryObj,pattern) {
 		var patternMatch = key.match(pattern);
 		if(patternMatch) {
 			//Get captured pattern
-			newKey = patternMatch[1];
+			var newKey = patternMatch[1];
 			obj[newKey] = queryObj[key];
 		}
 
