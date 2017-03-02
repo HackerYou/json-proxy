@@ -4,7 +4,23 @@ const xml2json = require('xml2json');
 const express = require('express');
 const app = express();
 
+function pullParams(queryObj,pattern) {
+	var obj = {};
+	//Pattern for is the request looks like `params[format]`
+	for(let key in queryObj) {
+		var patternMatch = key.match(pattern);
+		if(patternMatch) {
+			//Get captured pattern
+			newKey = patternMatch[1];
+			obj[newKey] = queryObj[key];
+		}
+
+
+	}
+	return obj;
+}
 app.get('/', (req,res) => {
+	console.log("Hi")
 	res.setHeader('Access-Control-Allow-Origin', '*'); 
 	res.setHeader("Content-Type", "application/json");
 
@@ -17,35 +33,18 @@ app.get('/', (req,res) => {
 
 		var url = query.reqUrl;
 
-		var params = (function(queryObj) {
-			var obj = {};
-			//Pattern for is the request looks like `params[format]`
-			var pattern = /params\[(.*)\]/;
-			for(key in queryObj) {
-				if(key !== 'reqUrl') {
-					//Check pattern
-					var patternMatch = key.match(pattern);
-					var newKey = '';
-					if(patternMatch) {
-						//Get captured pattern
-						newKey = patternMatch[1];
-					}
-					else {
-						newKey = key;
-					}
-					obj[newKey] = queryObj[key];
-				}
-			}
-			return obj;
-		})(query);
+		var params = pullParams(query,/params\[(.*)\]/);
+		console.log(params);
+		var userHeaders = pullParams(query,/proxyHeaders\[(.*)\]/);
 
 		var data = queryString.stringify(params);
-
+		var headers = Object.assign({},userHeaders,{
+			'User-Agent': 'Proxy.hackeryou.com',
+		});
+		console.log(headers);
 		request.get({
 				url: url + '?' + data,
-				headers: {
-					'User-Agent': 'Proxy.hackeryou.com'
-				}
+				headers: headers
 			},(err,response,body) => {
 			if(query.xmlToJSON === 'true') {
 				body = xml2json.toJson(body);
