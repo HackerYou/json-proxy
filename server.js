@@ -1,3 +1,4 @@
+'use strict'
 const queryString = require('querystring');
 const request = require('request');
 const xml2json = require('xml2json');
