@@ -8,13 +8,16 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 	<script>
 	$.ajax({
-		url: 'http://proxy.hackeryou.com',
+		url: 'http://localhost:4500',
 		type: 'GET',
 		data: {
 			reqUrl: 'http://api.brewerydb.com/v2/beers',
 			params: {
 				"key" :"217d6bd3a9e78edebe4af03ca28fa01b",
 				"styleId" :1 
+			},
+			proxyHeaders: {
+				'X-Something-Cool':'whoooooa'
 			}
 		}
 	}).then(function(res) {
@@ -57,6 +60,9 @@
 	// 		console.log(arguments);
 	// 	})
 	// });
+
+	const zomatoKey = "056fe9f78b1e5583b4b472414c36ebde";
+	
 	</script>
 </body>
 </html>
