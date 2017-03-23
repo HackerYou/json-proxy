@@ -9,7 +9,7 @@ The set up is very simple, when you make a request with `$.ajax` you might right
 
 	$.ajax({
 		url: 'http://api.site.com/api',
-		dataType: json,
+		dataType: 'json',
 		method:'GET',
 		data: {
 			key: apiKey,
