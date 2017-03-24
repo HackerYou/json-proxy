@@ -4,6 +4,12 @@ const request = require('request');
 const xml2json = require('xml2json');
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
+const DB_PATH = 'mongodb://localhost/cache';
+const Cache = require('./models/Cache.js');
+
+mongoose.connect(DB_PATH);
+
 
 function pullParams(queryObj,pattern) {
 	var obj = {};
@@ -20,6 +26,14 @@ function pullParams(queryObj,pattern) {
 	}
 	return obj;
 }
+
+const getRequest = (url, data, headers) => {
+	return request.get({
+		url: `${url}?${data}`,
+		headers
+	});
+}
+
 app.get('/', (req,res) => {
 	console.log("Hi")
 	res.setHeader('Access-Control-Allow-Origin', '*'); 
@@ -42,23 +56,54 @@ app.get('/', (req,res) => {
 		var headers = Object.assign({},userHeaders,{
 			'User-Agent': 'Proxy.hackeryou.com',
 		});
-		console.log(headers);
-		request.get({
-				url: url + '?' + data,
-				headers: headers
-			},(err,response,body) => {
-			if(query.xmlToJSON === 'true') {
-				body = xml2json.toJson(body);
-			}
-			if(response && response.statusCode === 200) {
-				res.writeHead(200);
-				res.end(body);
-			}
-			else {
-				res.writeHead(400);
-				res.end(body);
-			}
-		});
+
+		if (query.useCache === "true") {
+			const cached = Cache.findOne({endpoint: url}, (err, doc) => {
+				if (err) console.log(err);
+
+				if (doc) {
+					console.log('Retrieved from cache.');
+					res.send(JSON.parse(doc.response));
+				} else {
+					getRequest(url, data, headers)
+						.on('data', (reqRes) => {
+							const cache = new Cache();
+							cache.endpoint = url;
+							cache.response = JSON.stringify(reqRes.toString());
+							cache.date = new Date();
+							cache.save()
+								.then(() => {
+									console.log('Saved in cache.')
+									res.writeHead(200);
+									res.end(reqRes.toString());
+								})
+								.catch((err) => {
+									console.log('Error saving in cache: ' + err);
+									res.writeHead(500);
+									res.end(err);
+								});
+						});
+				}
+			});
+		} else {
+			request.get({
+					url: url + '?' + data,
+					headers: headers
+				},(err,response,body) => {
+
+				if(query.xmlToJSON === 'true') {
+					body = xml2json.toJson(body);
+				}
+				if(response && response.statusCode === 200) {
+					res.writeHead(200);
+					res.end(body);
+				}
+				else {
+					res.writeHead(400);
+					res.end(body);
+				}
+			});
+		}
 	}
 	else {
 		res.end('{"error": "Must be a GET request and contain a reqUrl param"}');
