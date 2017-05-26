@@ -35,7 +35,6 @@ const getRequest = (url, data, headers) => {
 }
 
 app.get('/', (req,res) => {
-	console.log("Hi")
 	res.setHeader('Access-Control-Allow-Origin', '*'); 
 	res.setHeader("Content-Type", "application/json");
 
@@ -49,7 +48,6 @@ app.get('/', (req,res) => {
 		var url = query.reqUrl;
 
 		var params = pullParams(query,/params\[(.*)\]/);
-		console.log(params);
 		var userHeaders = pullParams(query,/proxyHeaders\[(.*)\]/);
 
 		var data = queryString.stringify(params);
@@ -63,7 +61,8 @@ app.get('/', (req,res) => {
 
 				if (doc) {
 					console.log('Retrieved from cache.');
-					res.send(JSON.parse(doc.response));
+					res.status(200)
+						.send(JSON.parse(doc.response));
 				} else {
 					getRequest(url, data, headers)
 						.on('data', (reqRes) => {
@@ -74,13 +73,13 @@ app.get('/', (req,res) => {
 							cache.save()
 								.then(() => {
 									console.log('Saved in cache.')
-									res.writeHead(200);
-									res.end(reqRes.toString());
+									res.status(200)
+										.send(reqRes.toString());
 								})
 								.catch((err) => {
 									console.log('Error saving in cache: ' + err);
-									res.writeHead(500);
-									res.end(err);
+									res.status(500)
+										.send(err);
 								});
 						});
 				}
