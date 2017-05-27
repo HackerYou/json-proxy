@@ -10,19 +10,21 @@
 	$.ajax({
 		url: 'http://localhost:4500',
 		type: 'GET',
+		dataType: 'json',
 		data: {
 			reqUrl: 'http://api.brewerydb.com/v2/beers',
 			params: {
 				"key" :"217d6bd3a9e78edebe4af03ca28fa01b",
 				"styleId" :1 
 			},
+			useCache: true,
 			proxyHeaders: {
 				'X-Something-Cool':'whoooooa'
 			}
 		}
 	}).then(function(res) {
 		console.log(res);
-	});
+	},console.log);
 	//https://sheetsu.com/apis/14561de4
 	// var books = $.ajax({
 	// 	url: 'https://sheetsu.com/apis/14561de4',

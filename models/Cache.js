@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+mongoose.Promise = Promise;
+
 const CacheSchema = new mongoose.Schema({
 	endpoint: String,
 	response: String,

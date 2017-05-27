@@ -35,9 +35,13 @@ const getRequest = (url, data, headers) => {
 }
 
 app.get('/', (req,res) => {
-	console.log("Hi")
 	res.setHeader('Access-Control-Allow-Origin', '*'); 
-	res.setHeader("Content-Type", "application/json");
+	res.setHeader('Content-Type', 'application/json');
+	res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Content-length, Accept, Cache-Control');
+	res.setHeader('Cache-Control','no-cache, no-store, must-revalidate');
+	res.setHeader('Pragma','no-cache');
+	res.setHeader('Expires','0');
+
 
 	var query = queryString.parse(req.url.substring(2));
 	if(!query.xmlToJSON) {
@@ -49,7 +53,6 @@ app.get('/', (req,res) => {
 		var url = query.reqUrl;
 
 		var params = pullParams(query,/params\[(.*)\]/);
-		console.log(params);
 		var userHeaders = pullParams(query,/proxyHeaders\[(.*)\]/);
 
 		var data = queryString.stringify(params);
@@ -58,29 +61,36 @@ app.get('/', (req,res) => {
 		});
 
 		if (query.useCache === "true") {
-			const cached = Cache.findOne({endpoint: url}, (err, doc) => {
+			const cacheUrl = `${url}?${data}`
+			const cached = Cache.findOne({endpoint: cacheUrl}, (err, doc) => {
 				if (err) console.log(err);
 
 				if (doc) {
 					console.log('Retrieved from cache.');
-					res.send(JSON.parse(doc.response));
+					res.status(200)
+						.send(JSON.parse(doc.response));
+					return;
 				} else {
-					getRequest(url, data, headers)
-						.on('data', (reqRes) => {
+					const requestStream = getRequest(url, data, headers);
+					let reqRes = '';
+					requestStream.on('data', (buff) => {
+						reqRes += buff.toString();
+					});
+					requestStream.on('end', () => {
 							const cache = new Cache();
-							cache.endpoint = url;
-							cache.response = JSON.stringify(reqRes.toString());
+							cache.endpoint = cacheUrl;
+							cache.response = JSON.stringify(reqRes);
 							cache.date = new Date();
 							cache.save()
 								.then(() => {
 									console.log('Saved in cache.')
-									res.writeHead(200);
-									res.end(reqRes.toString());
+									res.status(200)
+										.send(reqRes.toString());
 								})
 								.catch((err) => {
 									console.log('Error saving in cache: ' + err);
-									res.writeHead(500);
-									res.end(err);
+									res.status(500)
+										.send(err);
 								});
 						});
 				}
@@ -95,12 +105,12 @@ app.get('/', (req,res) => {
 					body = xml2json.toJson(body);
 				}
 				if(response && response.statusCode === 200) {
-					res.writeHead(200);
-					res.end(body);
+					res.status(200)
+						.send(body);
 				}
-				else {
-					res.writeHead(400);
-					res.end(body);
+				else {;
+					res.status(400)
+						.send(body);
 				}
 			});
 		}
@@ -110,17 +120,17 @@ app.get('/', (req,res) => {
 	}
 });
 
-app.use(express.static(`${__dirname}/oauth/client`))
-app.get(['/oauth','/oauth*'], (req, res) => {
-	if(req.originalUrl.match(/client/gi)) {
-		//What is this all aboot?!?
+// app.use(express.static(`${__dirname}/oauth/client`))
+// app.get(['/oauth','/oauth*'], (req, res) => {
+// 	if(req.originalUrl.match(/client/gi)) {
+// 		//What is this all aboot?!?
 
-		res.sendFile(`${__dirname}/${req.originalUrl.replace('/oauth/oauth/','/oauth/')}`);
-	}
-	else {
-		res.sendFile(`${__dirname}/oauth/index.html`);
-	}
-});
+// 		res.sendFile(`${__dirname}/${req.originalUrl.replace('/oauth/oauth/','/oauth/')}`);
+// 	}
+// 	else {
+// 		res.sendFile(`${__dirname}/oauth/index.html`);
+// 	}
+// });
 
 
 
