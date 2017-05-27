@@ -61,7 +61,8 @@ app.get('/', (req,res) => {
 		});
 
 		if (query.useCache === "true") {
-			const cached = Cache.findOne({endpoint: url}, (err, doc) => {
+			const cacheUrl = `${url}?${data}`
+			const cached = Cache.findOne({endpoint: cacheUrl}, (err, doc) => {
 				if (err) console.log(err);
 
 				if (doc) {
@@ -73,12 +74,11 @@ app.get('/', (req,res) => {
 					const requestStream = getRequest(url, data, headers);
 					let reqRes = '';
 					requestStream.on('data', (buff) => {
-						
 						reqRes += buff.toString();
 					});
 					requestStream.on('end', () => {
 							const cache = new Cache();
-							cache.endpoint = url;
+							cache.endpoint = cacheUrl;
 							cache.response = JSON.stringify(reqRes);
 							cache.date = new Date();
 							cache.save()
