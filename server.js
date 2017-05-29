@@ -7,6 +7,22 @@ const app = express();
 const mongoose = require('mongoose');
 const DB_PATH = 'mongodb://localhost/cache';
 const Cache = require('./models/Cache.js');
+const bodyParser = require('body-parser');
+
+
+app.use(function(req, res, next) {
+	res.setHeader('Access-Control-Allow-Origin', '*'); 
+	res.setHeader('Content-Type', 'application/json');
+	res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Content-length, Accept, Cache-Control');
+	res.setHeader('Cache-Control','no-cache, no-store, must-revalidate');
+	res.setHeader('Pragma','no-cache');
+	res.setHeader('Expires','0');
+	res.header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+	next();
+}); 
+
+
+app.use(bodyParser.json())
 
 mongoose.connect(DB_PATH);
 
@@ -34,26 +50,29 @@ const getRequest = (url, data, headers) => {
 	});
 }
 
-app.get('/', (req,res) => {
-	res.setHeader('Access-Control-Allow-Origin', '*'); 
-	res.setHeader('Content-Type', 'application/json');
-	res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Content-length, Accept, Cache-Control');
-	res.setHeader('Cache-Control','no-cache, no-store, must-revalidate');
-	res.setHeader('Pragma','no-cache');
-	res.setHeader('Expires','0');
+app.all('/', (req,res) => {
+	let query = '';
+	if(req.method !== "POST") {
+		query = queryString.parse(req.url.substring(2));
+	}
+	else {
+		query = req.body;
+	}
 
-
-	var query = queryString.parse(req.url.substring(2));
 	if(!query.xmlToJSON) {
 		query.xmlToJSON = false;
 	}
-
-	if(req.method === 'GET' && query.reqUrl) {
+	if(query.reqUrl) {
 
 		var url = query.reqUrl;
-
-		var params = pullParams(query,/params\[(.*)\]/);
-		var userHeaders = pullParams(query,/proxyHeaders\[(.*)\]/);
+		if(req.method !== 'POST') {
+			var params = pullParams(query,/params\[(.*)\]/);
+			var userHeaders = pullParams(query,/proxyHeaders\[(.*)\]/);
+		}
+		else {
+			var params = query.params;
+			var userHeaders = query.proxyHeaders;
+		}
 
 		var data = queryString.stringify(params);
 		var headers = Object.assign({},userHeaders,{
@@ -96,23 +115,49 @@ app.get('/', (req,res) => {
 				}
 			});
 		} else {
-			request.get({
-					url: url + '?' + data,
-					headers: headers
-				},(err,response,body) => {
-
-				if(query.xmlToJSON === 'true') {
-					body = xml2json.toJson(body);
-				}
-				if(response && response.statusCode === 200) {
-					res.status(200)
-						.send(body);
-				}
-				else {;
-					res.status(400)
-						.send(body);
-				}
-			});
+			if(req.method === "POST") {
+				//TODO This is like super specific just for spotify right now!
+				request.post({
+						url: url,
+						headers: Object.assign(headers,{
+							'Content-Type': 'application/x-www-form-urlencoded',
+							'Accept':'application/json'
+						}),
+						body: data
+					},(err,response,body) => {
+					// console.log(response)
+					if(query.xmlToJSON === 'true') {
+						body = xml2json.toJson(body);
+					}
+					if(response && response.statusCode === 200) {
+						res.status(200)
+							.send(body);
+					}
+					else {;
+						res.status(400)
+							.send(body);
+					}
+				});
+			}
+			else {
+				request.get({
+						url: url + '?' + data,
+						headers: headers
+					},(err,response,body) => {
+					console.log(response)
+					if(query.xmlToJSON === 'true') {
+						body = xml2json.toJson(body);
+					}
+					if(response && response.statusCode === 200) {
+						res.status(200)
+							.send(body);
+					}
+					else {;
+						res.status(400)
+							.send(body);
+					}
+				});
+			}
 		}
 	}
 	else {
