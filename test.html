@@ -9,6 +9,7 @@
 	<script>
 	$.ajax({
 		url: 'http://localhost:4500',
+		// url: 'http://proxy.hackeryou.com',
 		type: 'GET',
 		dataType: 'json',
 		data: {
@@ -62,6 +63,22 @@
 	// 		console.log(arguments);
 	// 	})
 	// });
+
+	// myAPIProject.getBooks();
+
+	const pokeIds = [2,3,4,5,6,7,8];
+
+	const pokeCalls = pokeIds.map((poke) => (
+		$.ajax({
+			url: 'http://localhost:4500',
+			dataType: 'json',
+			method: 'GET',
+			data: {
+				reqUrl: `http://pokeapi.co/api/v2/pokemon/${poke}`,
+				useCache:true
+			}
+		})
+	))
 
 	const zomatoKey = "056fe9f78b1e5583b4b472414c36ebde";
 	

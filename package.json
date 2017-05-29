@@ -4,6 +4,7 @@
   "description": "Simple proxy for students to make JSON requests",
   "main": "server.js",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "express": "^4.14.0",
     "gulp": "^3.9.1",
     "mongoose": "^4.7.0",
