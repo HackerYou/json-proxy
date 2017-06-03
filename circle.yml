@@ -10,4 +10,4 @@ dependencies:
     - sudo apt-get install -y mongodb-org
     - sudo service mongod restart
     - npm install
-    - npm start
+    - node server.js &
