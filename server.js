@@ -9,7 +9,6 @@ const DB_PATH = 'mongodb://localhost/cache';
 const Cache = require('./models/Cache.js');
 const bodyParser = require('body-parser');
 
-
 app.use(function(req, res, next) {
 	res.setHeader('Access-Control-Allow-Origin', '*'); 
 	res.setHeader('Content-Type', 'application/json');
@@ -20,7 +19,6 @@ app.use(function(req, res, next) {
 	res.header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
 	next();
 }); 
-
 
 app.use(bodyParser.json())
 
@@ -144,7 +142,6 @@ app.all('/', (req,res) => {
 						url: url + '?' + data,
 						headers: headers
 					},(err,response,body) => {
-					console.log(response)
 					if(query.xmlToJSON === 'true') {
 						body = xml2json.toJson(body);
 					}

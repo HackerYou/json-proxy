@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Simple proxy for students to make JSON requests",
   "main": "server.js",
+  "scripts": {
+    "test": "mocha --watch",
+    "start": "node server.js"
+  },
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.14.0",
@@ -19,13 +23,12 @@
     "babel-preset-react": "^6.16.0",
     "babelify": "^7.3.0",
     "browserify": "^13.1.1",
+    "expect.js": "^0.3.1",
+    "mocha": "^3.4.2",
     "mongoose": "^4.9.1",
+    "supertest": "^3.0.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
   },
   "author": "Ryan Christiani",
   "license": "ISC"
