@@ -1,9 +1,9 @@
 machine:
   node:
     version: 8.0.0
-  services:
-    - mongodb
 test:
+  pre: 
+  - service mongod status || service mongod start
   overide:
     - node server.js &
     - npm test
