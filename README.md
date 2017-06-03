@@ -24,7 +24,7 @@ However because of CORS you might not be able to access the API this way. If the
 
 	$.ajax({
 		url: 'http://proxy.hackeryou.com',
-		dataType: json,
+		dataType: 'json',
 		method:'GET',
 		data: {
 			reqUrl: 'http://api.site.com/api',
@@ -32,6 +32,9 @@ However because of CORS you might not be able to access the API this way. If the
 				key: apiKey,
 				param1: value,
 				param2: value
+			},
+			proxyHeaders: {
+				'Some-Header': 'goes here'
 			},
 			xmlToJSON: false
 		}
