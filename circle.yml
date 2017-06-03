@@ -1,7 +1,8 @@
 machine:
   node:
     version: 8.0.0
-test:
-  override:
-    - node server.js &
-    - npm test
+dependencies:
+  post: 
+    - npm start
+      background: true
+    - sleep 150
