@@ -2,7 +2,7 @@ machine:
   node:
     version: 8.0.0
 dependencies:
-  override:
+  pre:
     - sudo apt-get purge mongodb-org*
     - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
     - echo "deb http://repo.mongodb.org/apt/ubuntu precise/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
@@ -10,4 +10,6 @@ dependencies:
     - sudo apt-get install -y mongodb-org
     - sudo service mongod restart
     - npm install
+compile:
+  override:
     - node server.js &
