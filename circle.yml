@@ -1,8 +1,7 @@
 machine:
   node:
     version: 8.0.0
-dependencies:
-  post: 
-    - npm start:
+test:
+  pre:
+    - node server.js:
       background: true
-    - sleep 150
