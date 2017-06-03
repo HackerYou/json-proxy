@@ -3,6 +3,6 @@ machine:
     version: 8.0.0
 dependencies:
   post: 
-    - npm start
+    - npm start:
       background: true
     - sleep 150
