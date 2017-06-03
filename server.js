@@ -114,6 +114,7 @@ app.all('/', (req,res) => {
 			});
 		} else {
 			if(req.method === "POST") {
+				console.log("POST")
 				//TODO This is like super specific just for spotify right now!
 				request.post({
 						url: url,

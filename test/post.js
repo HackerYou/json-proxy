@@ -12,7 +12,7 @@ describe('Post requests', () => {
 				}
 			})
 			.end((err,res) => {
-				expect(err).to.be('null');
+				expect(err).to.be(null);
 				done(); 
 			})
 	});
