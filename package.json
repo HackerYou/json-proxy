@@ -4,7 +4,8 @@
   "description": "Simple proxy for students to make JSON requests",
   "main": "server.js",
   "scripts": {
-    "test": "mocha --watch test/",
+    "test_watch": "mocha --watch test/",
+    "test": "mocha",
     "start": "node server.js"
   },
   "dependencies": {
