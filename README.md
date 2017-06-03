@@ -1,6 +1,6 @@
 # Simple Proxy Server
 
-[![CircleCI](https://img.shields.io/circleci/project/hackeryou/jsonproxy.svg?style=flat-square)](https://circleci.com/gh/hackeryou/jsonproxy)
+[![CircleCI](https://img.shields.io/circleci/project/HackerYou/json-proxy.svg?style=flat-square)](https://circleci.com/gh/hackeryou/jsonproxy)
 
 This is a very simple proxy server to get around CORS issues when an API does not provide JSONP.
 
