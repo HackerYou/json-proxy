@@ -38,7 +38,8 @@ However because of CORS you might not be able to access the API this way. If the
 			proxyHeaders: {
 				'Some-Header': 'goes here'
 			},
-			xmlToJSON: false
+			xmlToJSON: false,
+			useCache: false
 		}
 	}).then(function(res) {
 		...
@@ -53,4 +54,8 @@ param | type | description
 reqUrl | `string` | The URL for your endpoint.
 params | `object` | The options that you would normally pass to the data object
 xmlToJSON | `boolean` | Defaults to `false`, change to true if API returns XML
+useCache | `boolean` | Defaults to `false`, change to store your response from an API for 1 hour. 
+
+
+
 
