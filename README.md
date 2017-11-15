@@ -38,7 +38,8 @@ However because of CORS you might not be able to access the API this way. If the
 			proxyHeaders: {
 				'Some-Header': 'goes here'
 			},
-			xmlToJSON: false
+			xmlToJSON: false,
+			useCache: false
 		}
 	}).then(function(res) {
 		...
@@ -53,4 +54,10 @@ param | type | description
 reqUrl | `string` | The URL for your endpoint.
 params | `object` | The options that you would normally pass to the data object
 xmlToJSON | `boolean` | Defaults to `false`, change to true if API returns XML
+useCache | `boolean` | Defaults to `false`, change to store your response from an API for 1 hour. 
+
+## Basic Auth Proxy
+
+There is also a feature to allow for users to have an account were they can store their Basic Authentication information for various API's. At `/dashboard` a user can login using their Readme about (HackerYou Students only at this point) and create an entry for every site they need. You will be given a unique URL to make your request to from there. 
+
 
