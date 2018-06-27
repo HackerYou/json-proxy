@@ -71,7 +71,6 @@ app.all('/', (req,res) => {
 			var params = query.params;
 			var userHeaders = query.proxyHeaders;
 		}
-
 		var data = queryString.stringify(params);
 		var headers = Object.assign({},userHeaders,{
 			'User-Agent': 'Proxy.hackeryou.com',
@@ -121,9 +120,8 @@ app.all('/', (req,res) => {
 							'Content-Type': 'application/x-www-form-urlencoded',
 							'Accept':'application/json'
 						}),
-						body: data
+						body: JSON.stringify(params)
 					},(err,response,body) => {
-					// console.log(response)
 					if(query.xmlToJSON === 'true') {
 						body = xml2json.toJson(body);
 					}
@@ -138,6 +136,7 @@ app.all('/', (req,res) => {
 				});
 			}
 			else {
+				console.log(data);
 				request.get({
 						url: url + '?' + data,
 						headers: headers
