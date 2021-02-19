@@ -42,8 +42,33 @@ However because of CORS you might not be able to access the API this way. If the
 			useCache: false
 		}
 	}).then(function(res) {
-		...
+		/* ... */
 	});
+	
+### Using the Fetch API
+
+You can use the [Fetch API]([Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)) for making requests too
+
+```js
+const proxiedUrl = 'http://api.site.com/api';
+
+const url = new URL('http://proxy.hackeryou.com');
+url.search = new URLSearchParams({
+  reqUrl: proxiedUrl,
+  'params[key]': apiKey,
+  'params[param1]': value,
+  'params[param2]': value,
+  'proxyHeaders[Some-Header]': 'goes here',
+});
+
+fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    /* ... */
+  });
+```
+
+**Note the need to use square bracket query parameter notation `[]` for the `params` and `proxyHeaders` proxy param options!**
 
 ### Options to pass
 
@@ -52,7 +77,8 @@ You pass your information via the `data` object, in there there are a bunch of o
 param | type | description 
 ----- | ------ | -----------
 reqUrl | `string` | The URL for your endpoint.
-params | `object` | The options that you would normally pass to the data object
+params | `object` / `params[key]` | The options that you would normally pass to the data object
+proxyHeaders | `object` / `proxyHeaders[header]` | Headers to pass to the API
 xmlToJSON | `boolean` | Defaults to `false`, change to true if API returns XML
 useCache | `boolean` | Defaults to `false`, change to store your response from an API for 1 hour. 
 
