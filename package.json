@@ -12,7 +12,7 @@
     "body-parser": "^1.17.2",
     "express": "^4.14.0",
     "gulp": "^3.9.1",
-    "mongoose": "^4.7.0",
+    "mongoose": "^5.7.5",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-router": "^3.0.0",
