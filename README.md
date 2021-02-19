@@ -47,7 +47,7 @@ However because of CORS you might not be able to access the API this way. If the
 	
 ### Using the Fetch API
 
-You can use the [Fetch API]([Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)) for making requests too
+You can use the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) for making requests too
 
 ```js
 const proxiedUrl = 'http://api.site.com/api';
