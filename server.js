@@ -157,22 +157,8 @@ app.all('/', (req,res) => {
 		}
 	}
 	else {
-		res.end('{"error": "Must be a GET request and contain a reqUrl param"}');
+		res.end('{"error": "Request must contain a reqUrl param"}');
 	}
 });
-
-// app.use(express.static(`${__dirname}/oauth/client`))
-// app.get(['/oauth','/oauth*'], (req, res) => {
-// 	if(req.originalUrl.match(/client/gi)) {
-// 		//What is this all aboot?!?
-
-// 		res.sendFile(`${__dirname}/${req.originalUrl.replace('/oauth/oauth/','/oauth/')}`);
-// 	}
-// 	else {
-// 		res.sendFile(`${__dirname}/oauth/index.html`);
-// 	}
-// });
-
-
 
 app.listen(4500);
