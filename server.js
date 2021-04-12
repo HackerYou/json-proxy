@@ -7,7 +7,6 @@ const app = express();
 const mongoose = require('mongoose');
 const DB_PATH = 'mongodb://localhost/cache';
 const Cache = require('./models/Cache.js');
-const bodyParser = require('body-parser');
 
 app.use(function(req, res, next) {
 	res.setHeader('Access-Control-Allow-Origin', '*'); 
@@ -20,9 +19,12 @@ app.use(function(req, res, next) {
 	next();
 }); 
 
-app.use(bodyParser.json())
+app.use(express.json())
 
-mongoose.connect(DB_PATH);
+mongoose.connect(DB_PATH, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+});
 
 
 function pullParams(queryObj,pattern) {
