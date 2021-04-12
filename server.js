@@ -115,14 +115,19 @@ app.all('/', (req,res) => {
 			});
 		} else {
 			if(req.method === "POST") {
-				//TODO This is like super specific just for spotify right now!
+				const defaultHeaders = {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'Accept': 'application/json'
+				}; // these can be overriden by user provided headers
+
+				const requestHeaders = Object.assign({}, defaultHeaders, headers);
+
+				console.log(requestHeaders);
+
 				request.post({
 						url: url,
-						headers: Object.assign(headers,{
-							'Content-Type': 'application/x-www-form-urlencoded',
-							'Accept':'application/json'
-						}),
-						body: JSON.stringify(params)
+					headers: requestHeaders,
+					body: JSON.stringify(params),
 					},(err,response,body) => {
 					if(query.xmlToJSON === 'true') {
 						body = xml2json.toJson(body);
