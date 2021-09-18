@@ -6,14 +6,17 @@ describe('Post requests', () => {
 		request
 			.post('http://localhost:4500')
 			.send({
-				reqUrl: 'http://api.hackeryou.com/v1/key',
+				reqUrl: 'https://reqbin.com/echo/post/json',
 				params: {
-					email: 'ryan@hackeryou.com'
+				  "Id": 12345,
+				  "Customer": "Jane Smith",
+				  "Quantity": 1,
+				  "Price": 99.99
 				}
 			})
 			.end((err,res) => {
 				expect(err).to.be(null);
-				done(); 
+				done();
 			})
 	});
 });
