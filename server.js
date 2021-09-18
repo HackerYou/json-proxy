@@ -9,7 +9,7 @@ const DB_PATH = 'mongodb://localhost/cache';
 const Cache = require('./models/Cache.js');
 
 app.use(function(req, res, next) {
-	res.setHeader('Access-Control-Allow-Origin', '*'); 
+	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Content-Type', 'application/json');
 	res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Content-length, Accept, Cache-Control');
 	res.setHeader('Cache-Control','no-cache, no-store, must-revalidate');
@@ -17,7 +17,7 @@ app.use(function(req, res, next) {
 	res.setHeader('Expires','0');
 	res.header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
 	next();
-}); 
+});
 
 app.use(express.json())
 
