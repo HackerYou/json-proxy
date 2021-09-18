@@ -5,15 +5,20 @@ jobs:
   run-tests:
     docker:
       - image: 'cimg/base:stable'
-      - image: circleci/mongo:5.0
-        command: [mongod]
+      - image: 'mongo:5.0'
     steps:
       - checkout
+      - run:
+          name: Sleeping to wait for MongoDB to start
+          command: sleep 60
+      - run:
+          name: Validating the port is open for MongoDB
+          command: dockerize -wait tcp://localhost:27017 -timeout 1m
+      - run:
+          name: Sleeping to wait for MongoDB to finish starting
+          command: sleep 60
       - node/install:
           install-yarn: true
-      - run:
-          name: Wait for MongoDB
-          command: dockerize -wait tcp://localhost:27017 -timeout 2m
       - node/install-packages
       - run:
           command: npm run test
