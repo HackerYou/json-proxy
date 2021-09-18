@@ -84,7 +84,9 @@ useCache | `boolean` | Defaults to `false`, change to store your response from a
 
 ## How to deploy
 
-To deploy on a single Linux host use the following directions.
+### System prerequisites
+
+To deploy on a single Linux host use the following directions. These are best all run as root except launching the actual app unless its as a container.
 
 These are specific to Rocky Linux 8, but should work on CentOS 8 and RHEL 8 as well.
 
@@ -93,10 +95,16 @@ First up let's install the required packages from the Rocky repository.
 ```sh
 sudo dnf module enable -y nodejs:14
 sudo dnf module install -y nodejs
+sudo dnf module install -y python39
 sudo dnf install -y git make gcc gcc-c++ checkpolicy
 ```
 
-Next let's get MongoDB, first setup the repository (as root)
+### The MongoDB setup
+
+This could be done on a separate host but then then server.js needs to be updated with the location. Ideally you could do this an an environment variable.
+
+First step to get MongoDB is to point to its repository
+
 ```sh
 cat > /etc/yum.repos.d/mongodb-org-5.0.repo <<EOF
 [mongodb-org-5.0]
@@ -108,7 +116,8 @@ gpgkey=https://www.mongodb.org/static/pgp/server-5.0.asc
 EOF
 ```
 
-Next prep the system for MongoDB.
+Next prep the system for MongoDB (the semodule commands take a minute).
+
 ```sh
 ulimit -n 65536
 cat > mongodb_cgroup_memory.te <<EOF
@@ -149,16 +158,36 @@ sudo systemctl daemon-reload
 sudo systemctl start mongod
 ```
 
-Next let's get the json-proxy code, install the dependancies, and start it up.
+Is it running? If the output looks like this we are good.
+
+```sh
+[root@proxy ~]# ps auxww | grep mongod
+mongod     17707  1.4  5.2 1591976 97824 ?       Sl   02:57   0:00 /usr/bin/mongod -f /etc/mongod.conf
+root       17852  0.0  0.0 221928  1152 pts/0    R+   02:57   0:00 grep --color=auto mongod
+```
+
+### Get the code
+
+Next let's get the json-proxy code, and enter the directory
 
 ```sh
 git clone https://github.com/HackerYou/json-proxy
 cd json-proxy
+```
+
+### Run it as is
+
+Just install the dependancies, and start it up.
+
+```sh
 npm install
 node server.js
 ```
 
-If you want to run it as a container then there are an additional couple steps. First we get the tools and build the image.
+### Run it in a container
+
+If you want to run it as a container then there are an additional couple steps. First we get the tools and build the image. The container-tools install takes a couple minutes and so will the first build.
+
 ```sh
 dnf module install -y container-tools
 podman build . -t hackeryou/json-proxy
