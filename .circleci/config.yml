@@ -1,5 +1,6 @@
 orbs:
   node: circleci/node@4.7.0
+  wait-for: cobli/wait-for@0.0.2
 
 version: 2.1
 
@@ -7,14 +8,12 @@ jobs:
   test:
     docker:
       - image: circleci/mongo:latest
+    executor:
+      name: node/default
     steps:
       - checkout
-      - run:
-          name: Waiting for MongoDB to be ready
-          command: dockerize -wait tcp://localhost:27017 -timeout 2m
-      - run:
-          name: Install dependancies
-          command: npm install
+      - run: node/install-packages
+      - run: wait-for/mongo
       - run:
           name: Run tests
           command: npm run test
