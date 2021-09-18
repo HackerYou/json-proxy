@@ -186,6 +186,8 @@ node server.js
 
 ### Run it in a container
 
+Note: podman is used in this example. If you are on a system with the docker cli instead then just replace `podman` with `docker` as they should be completely interchange. (Podman was designed to use Docker's command line syntax.)
+
 If you want to run it as a container then there are an additional couple steps. First we get the tools and build the image. The container-tools install takes a couple minutes and so will the first build.
 
 ```sh
