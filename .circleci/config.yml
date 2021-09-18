@@ -1,6 +1,5 @@
 orbs:
   node: circleci/node@4.7.0
-  wait-for: cobli/wait-for@0.0.2
 
 version: 2.1
 
@@ -12,8 +11,15 @@ jobs:
       name: node/default
     steps:
       - checkout
+      - run:
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+      - run:
+          name: Wait for MongoDB
+          command: dockerize -wait tcp://localhost:27017 -timeout 2m
       - run: node/install-packages
-      - run: wait-for/mongo
       - run:
           name: Run tests
           command: npm run test
