@@ -95,7 +95,7 @@ First up let's install the required packages from the Rocky repository.
 ```sh
 sudo dnf module enable -y nodejs:14
 sudo dnf module install -y nodejs
-sudo dnf module install -y python39
+sudo dnf module install -y python36
 sudo dnf install -y git make gcc gcc-c++ checkpolicy
 ```
 
@@ -103,7 +103,7 @@ sudo dnf install -y git make gcc gcc-c++ checkpolicy
 
 This could be done on a separate host but then then server.js needs to be updated with the location. Ideally you could do this an an environment variable.
 
-First step to get MongoDB is to point to its repository
+First step to get MongoDB is to point to its repository (as root)
 
 ```sh
 cat > /etc/yum.repos.d/mongodb-org-5.0.repo <<EOF
@@ -116,7 +116,8 @@ gpgkey=https://www.mongodb.org/static/pgp/server-5.0.asc
 EOF
 ```
 
-Next prep the system for MongoDB (the semodule commands take a minute).
+Next prep the system for MongoDB (as root)
+The semodule commands take a minute.
 
 ```sh
 ulimit -n 65536
@@ -152,7 +153,7 @@ semodule -i mongodb_proc_net.pp
 
 And install and start up MongoDB
 ```sh
-dnf install -y mongodb-org
+sudo dnf install -y mongodb-org
 sudo systemctl enable mongod
 sudo systemctl daemon-reload
 sudo systemctl start mongod
@@ -161,7 +162,7 @@ sudo systemctl start mongod
 Is it running? If the output looks like this we are good.
 
 ```sh
-[root@proxy ~]# ps auxww | grep mongod
+[user@proxy ~]$ ps auxww | grep mongod
 mongod     17707  1.4  5.2 1591976 97824 ?       Sl   02:57   0:00 /usr/bin/mongod -f /etc/mongod.conf
 root       17852  0.0  0.0 221928  1152 pts/0    R+   02:57   0:00 grep --color=auto mongod
 ```
